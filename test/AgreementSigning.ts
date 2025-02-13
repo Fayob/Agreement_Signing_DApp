@@ -2,7 +2,6 @@ import {
   time,
   loadFixture,
 } from "@nomicfoundation/hardhat-toolbox/network-helpers";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { expect } from "chai";
 import hre from "hardhat";
 
@@ -29,9 +28,21 @@ describe("Agreement Signing", () => {
 
   describe("Create Signing", () => {
     it("should be able to create signing", async () => {
-      const {deployedContract, seller, AGREEMENT_PRICE, DEADLINE} = await loadFixture(deployAgreement)
+      const {deployedContract, buyer, seller, AGREEMENT_PRICE, DEADLINE} = await loadFixture(deployAgreement)
 
-      await deployedContract.createAgreement(seller, "name", "description", AGREEMENT_PRICE, DEADLINE)
+      await deployedContract.connect(buyer).createAgreement(seller, "name", "description", AGREEMENT_PRICE, DEADLINE)
+      
+      expect(await deployedContract.agreementId()).to.equal(1)
+    })
+  })
+  
+  describe("Sign Agreement", () => {
+    it("should be able to sign agreement", async () => {
+      const {deployedContract, seller, buyer, AGREEMENT_PRICE, DEADLINE} = await loadFixture(deployAgreement)
+
+      await deployedContract.connect(buyer).createAgreement(seller, "name", "description", AGREEMENT_PRICE, DEADLINE)
+      
+      await deployedContract.connect(seller).signAgreement(buyer, 1)
 
       expect(await deployedContract.agreementId()).to.equal(1)
     })

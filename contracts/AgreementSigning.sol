@@ -64,7 +64,7 @@ contract AgreementSigning {
     agreement.description = _desc;
     agreement.price = _price;
     agreement.agreementId = newAgreementId;
-    agreement.deadline - _deadline;
+    agreement.deadline = _deadline;
     agreement.seller = _seller;
     agreement.buyer = msg.sender;
 
